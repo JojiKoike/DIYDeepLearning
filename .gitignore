@@ -193,3 +193,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+# Data
+dataset/mnist.pkl
+dataset/*.gz
+

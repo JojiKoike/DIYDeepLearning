@@ -3,8 +3,8 @@ import os.path
 import gzip
 import pickle
 import os
+from typing import Optional, Dict, Any
 import numpy as np
-from numpy.core._multiarray_umath import ndarray
 
 url_base = 'http://yann.lecun.com/exdb/mnist/'
 key_file = {
@@ -62,16 +62,15 @@ def _load_img(file_name: str):
     return data
 
 
-def _convert_numpy():
-    dataset = {}
-    dataset['train_img'] = _load_img(key_file['train_img'])
-    dataset['train_label'] = _load_label(key_file['train_label'])
-    dataset['test_img'] = _load_img(key_file['test_img'])
-    dataset['test_label'] = _load_label(key_file['test_label'])
-    return dataset
+def _convert_numpy() -> Dict[str, Optional[Any]]:
+    data_set: Dict[str, Optional[Any]] = {'train_img': _load_img(key_file['train_img']),
+                                          'train_label': _load_label(key_file['train_label']),
+                                          'test_img': _load_img(key_file['test_img']),
+                                          'test_label': _load_label(key_file['test_label'])}
+    return data_set
 
 
-def init_mnist():
+def init_mnist() -> None:
     download_mnist()
     dataset = _convert_numpy()
     print("Creating pickle file ...")
@@ -80,8 +79,8 @@ def init_mnist():
     print("Done")
 
 
-def _change_one_hot_label(x) -> ndarray:
-    t: ndarray = np.zeros((x.size, 10))
+def _change_one_hot_label(x):
+    t = np.zeros((x.size, 10))
     for idx, row in enumerate(t):
         row[x[idx]] = 1
     return t
@@ -95,4 +94,27 @@ def load_mnist(normalize=True, flatten=True, one_hot_label=False):
     :param one_hot_label:
     :return:
     """
-    pass
+    if not os.path.exists(save_file):
+        init_mnist()
+
+    with open(save_file, 'rb') as f:
+        data_set = pickle.load(f)
+
+    if normalize:
+        for key in ('train_img', 'test_img'):
+            data_set[key] = data_set[key].astype(np.float32)
+            data_set[key] /= 255.0
+
+    if one_hot_label:
+        data_set['train_label'] = _change_one_hot_label(data_set['train_label'])
+        data_set['test_label'] = _change_one_hot_label(data_set['test_label'])
+
+    if not flatten:
+        for key in ('train_img', 'test_img'):
+            data_set[key] = data_set[key].reshapce(-1, 1, 28, 28)
+
+    return (data_set['train_img'], data_set['train_label']), (data_set['test_img'], data_set['test_label'])
+
+
+if __name__ == '__main__':
+    init_mnist()
