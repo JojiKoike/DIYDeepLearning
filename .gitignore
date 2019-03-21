@@ -194,6 +194,7 @@ Temporary Items
 .apdisk
 
 # Data
-dataset/mnist.pkl
-dataset/*.gz
+*/mnist.pkl
+*/*.gz
+*/sample_weight.pkl
 
