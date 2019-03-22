@@ -197,4 +197,5 @@ Temporary Items
 */mnist.pkl
 */*.gz
 */sample_weight.pkl
+Pipfile.lock
 
