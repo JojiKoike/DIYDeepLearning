@@ -3,7 +3,7 @@ import os.path
 import gzip
 import pickle
 import os
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, Tuple
 import numpy as np
 
 url_base = 'http://yann.lecun.com/exdb/mnist/'
@@ -86,7 +86,8 @@ def _change_one_hot_label(x):
     return t
 
 
-def load_mnist(normalize=True, flatten=True, one_hot_label=False):
+def load_mnist(normalize=True, flatten=True, one_hot_label=False) -> \
+        Tuple[Tuple[np.ndarray, np.ndarray], Tuple[np.ndarray, np.ndarray]]:
     """
     Load MNIST Dataset
     :param normalize:
