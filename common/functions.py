@@ -1,6 +1,15 @@
 import numpy as np
 
 
+def sigmoid(x: np.ndarray) -> np.ndarray:
+    """
+    Sigmoid Function
+    :param x: Input
+    :return: Activated Value
+    """
+    return 1.0 / (1.0 + np.exp(-x))
+
+
 def softmax(a: np.ndarray) -> np.ndarray:
     """
     Softmax Activate Function
