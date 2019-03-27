@@ -3,7 +3,7 @@ import os
 sys.path.append(os.pardir)
 from common.functions import sigmoid, softmax, cross_entropy_error
 from common.gradient import numerical_gradient
-from typing import Dict, Callable
+from typing import Dict, Callable, NoReturn
 import numpy as np
 
 
@@ -13,7 +13,7 @@ class TwoLayerNet:
     """
 
     def __init__(self, input_size: int, hidden_size: int,
-                 output_size: int, weight_init_std: float = 0.01) -> None:
+                 output_size: int, weight_init_std: float = 0.01) -> NoReturn:
         self.params: Dict[str, np.ndarray] = {}
         self.params['W1'] = weight_init_std * \
                             np.random.randn(input_size, hidden_size)
@@ -22,7 +22,7 @@ class TwoLayerNet:
                             np.random.randn(hidden_size, output_size)
         self.params['b2'] = np.zeros(output_size)
 
-    def predict(self, x: np.ndarray):
+    def predict(self, x: np.ndarray) -> np.ndarray:
         W1: np.ndarray
         W2: np.ndarray
         b1: np.ndarray
@@ -37,7 +37,7 @@ class TwoLayerNet:
 
         return y
 
-    def loss(self, x: np.ndarray, t: np.ndarray):
+    def loss(self, x: np.ndarray, t: np.ndarray) -> float:
         y: np.ndarray = self.predict(x)
 
         return cross_entropy_error(y, t)
