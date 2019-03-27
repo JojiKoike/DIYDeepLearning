@@ -23,11 +23,9 @@ def cross_entropy_error(y: np.ndarray, t: np.ndarray) -> float:
     if y.ndim == 1:
         t = t.reshape(1, t.size)
         y = y.reshape(1, y.size)
-        
+
+    if t.size == y.size:
+        t = t.argmax(axis=1)
+
     batch_size = y.shape[0]
-    if t.shape[0] == 1:
-        # NON one_hot expression
-        return -np.sum(np.log(y[np.arange(batch_size), t])) / batch_size
-    else:
-        # one_hod expression
-        return -np.sum(t * np.log(y)) / batch_size
+    return -np.sum(np.log(y[np.arange(batch_size), t] + 1e-7)) / batch_size
