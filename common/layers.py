@@ -1,5 +1,5 @@
-import numpy as np
 from dataclasses import dataclass
+import numpy as np
 
 
 @dataclass
@@ -30,3 +30,27 @@ class Sigmoid:
     def backward(self, d_out: np.ndarray) -> np.ndarray:
         dx: np.ndarray = d_out * self.out * (1.0 - self.out)
         return dx
+
+
+class Affine:
+    def __init__(self, w: np.ndarray, b: np.ndarray):
+        self.w: np.ndarray = w
+        self.b: np.ndarray = b
+
+        self.x: np.ndarray = None
+        self.x_original_shape: np.ndarray = None
+        self.d_w: np.ndarray = None
+        self.d_b: np.ndarray = None
+
+    def forward(self, x: np.ndarray) -> np.ndarray:
+        self.x_original_shape = x.shape
+        self.x = x.reshape(x.shape[0], -1)
+        return np.dot(self.x, self.w) + self.b
+
+    def backward(self, d_out: np.ndarray) -> np.ndarray:
+        d_x: np.ndarray = np.dot(d_out, self.w.T)
+        self.d_w = np.dot(self.x.T, d_out)
+        self.d_b = np.sum(d_out, axis=0)
+
+        d_x = d_x.reshape(*self.x_original_shape)
+        return d_x
