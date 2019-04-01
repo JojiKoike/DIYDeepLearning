@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from common.functions import softmax, cross_entropy_error
 import numpy as np
 
 
@@ -54,3 +55,28 @@ class Affine:
 
         d_x = d_x.reshape(*self.x_original_shape)
         return d_x
+
+
+@dataclass
+class SoftmaxWithLoss:
+    loss: float
+    output_softmax: np.ndarray
+    teacher: np.ndarray
+
+    def forward(self, x: np.ndarray, t: np.ndarray) -> float:
+        self.teacher = t
+        self.output_softmax = softmax(x)
+        self.loss = cross_entropy_error(self.output_softmax, self.teacher)
+
+        return self.loss
+
+    def backward(self, dout=1) -> np.ndarray:
+        batch_size = self.teacher.shape[0]
+        if self.teacher.size == self.output_softmax.shape[0]:
+            dx: np.ndarray = (self.output_softmax - self.teacher) / batch_size
+        else:
+            dx = self.output_softmax.copy()
+            dx[np.arange(batch_size), self.teacher] -= 1
+            dx = dx / batch_size
+
+        return dx
