@@ -3,9 +3,10 @@ from common.functions import softmax, cross_entropy_error
 import numpy as np
 
 
-@dataclass
 class Relu:
-    mask: np.ndarray
+
+    def __init__(self):
+        self.mask = None
 
     def forward(self, x: np.ndarray) -> np.ndarray:
         self.mask = (x <= 0)
@@ -59,9 +60,11 @@ class Affine:
 
 @dataclass
 class SoftmaxWithLoss:
-    loss: float
-    output_softmax: np.ndarray
-    teacher: np.ndarray
+
+    def __init__(self):
+        self.loss = None
+        self.y = None
+        self.t = None
 
     def forward(self, x: np.ndarray, t: np.ndarray) -> float:
         self.teacher = t
