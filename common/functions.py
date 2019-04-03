@@ -10,13 +10,20 @@ def sigmoid(x: np.ndarray) -> np.ndarray:
     return 1.0 / (1.0 + np.exp(-x))
 
 
-def softmax(a: np.ndarray) -> np.ndarray:
+def softmax(x: np.ndarray) -> np.ndarray:
     """
     Softmax Activate Function
-    :param a:
+    :param x:
     :return:
     """
-    return np.exp(a) / np.sum(np.exp(a))
+    if x.ndim == 2:
+        x = x.T
+        x = x - np.max(x, axis=0)
+        y: np.ndarray = np.exp(x) / np.sum(np.exp(x), axis=0)
+        return y.T
+
+    x -= np.max(x)
+    return np.exp(x) / np.sum(np.exp(x))
 
 
 def cross_entropy_error(y: np.ndarray, t: np.ndarray) -> float:
