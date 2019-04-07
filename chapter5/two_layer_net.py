@@ -28,7 +28,7 @@ class TwoLayerNet:
 
         return x
 
-    def loss(self, x: np.ndarray, t: np.ndarray) -> np.ndarray:
+    def loss(self, x: np.ndarray, t: np.ndarray) -> float:
         y: np.ndarray = self.predict(x)
         return self.lastLayer.forward(y, t)
 
@@ -41,7 +41,7 @@ class TwoLayerNet:
         return np.sum(y == t) / float(x.shape[0])
 
     def numerical_gradient(self, x: np.ndarray, t: np.ndarray) -> Dict[str, np.ndarray]:
-        loss_w: Callable[[np.ndarray], np.ndarray] = lambda w: self.loss(x, t)
+        loss_w: Callable[[np.ndarray], float] = lambda w: self.loss(x, t)
 
         grads: Dict[str, np.ndarray] = {}
         grads['W1'] = numerical_gradient(loss_w, self.params['W1'])
