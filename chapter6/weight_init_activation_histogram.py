@@ -21,3 +21,9 @@ for i in range(hidden_layer_size):
     z = np.dot(x, w)
     a = sigmoid(z)
     activations[i] = a
+
+for i, a in activations.items():
+    plt.subplot(1, len(activations), i + 1)
+    plt.title(str(i + 1) + "-layer")
+    plt.hist(a.flatten(), 30, range(0,1))
+plt.show()
